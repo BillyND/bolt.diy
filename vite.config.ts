@@ -117,7 +117,7 @@ export default defineConfig((config) => {
       },
     },
     plugins: [
-      config.mode !== 'test' && remixCloudflareDevProxy(),
+      config?.mode === 'development' && config?.mode !== 'test' && remixCloudflareDevProxy(),
       remixVitePlugin({
         presets: [vercelPreset()],
         future: {
