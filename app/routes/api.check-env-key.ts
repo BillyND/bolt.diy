@@ -7,14 +7,22 @@ export const loader: LoaderFunction = async ({ context, request }) => {
   const provider = url.searchParams.get('provider');
 
   if (!provider) {
-    return Response.json({ isSet: false });
+    return new Response(JSON.stringify({ isSet: false }), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 
   const llmManager = LLMManager.getInstance(context?.cloudflare?.env as any);
   const providerInstance = llmManager.getProvider(provider);
 
   if (!providerInstance || !providerInstance.config.apiTokenKey) {
-    return Response.json({ isSet: false });
+    return new Response(JSON.stringify({ isSet: false }), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 
   const envVarName = providerInstance.config.apiTokenKey;
@@ -37,5 +45,9 @@ export const loader: LoaderFunction = async ({ context, request }) => {
     llmManager.env[envVarName]
   );
 
-  return Response.json({ isSet });
+  return new Response(JSON.stringify({ isSet }), {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
 };

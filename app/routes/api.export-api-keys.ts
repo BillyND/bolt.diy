@@ -40,5 +40,10 @@ export const loader: LoaderFunction = async ({ context, request }) => {
     }
   }
 
-  return Response.json(apiKeys);
+ 
+  return new Response(JSON.stringify(apiKeys), {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
 };
