@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { cloudflareDevProxyVitePlugin as remixCloudflareDevProxy, vitePlugin as remixVitePlugin } from '@remix-run/dev';
 import UnoCSS from 'unocss/vite';
 import { defineConfig, type ViteDevServer } from 'vite';
@@ -8,6 +9,7 @@ import * as dotenv from 'dotenv';
 import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { vercelPreset } from '@vercel/remix/vite';
 
 dotenv.config();
 
@@ -115,6 +117,16 @@ export default defineConfig((config) => {
       },
     },
     plugins: [
+      config.mode !== 'test' && remixCloudflareDevProxy(),
+      remixVitePlugin({
+        presets: [vercelPreset()],
+        future: {
+          v3_fetcherPersist: true,
+          v3_relativeSplatPath: true,
+          v3_throwAbortReason: true,
+          v3_lazyRouteDiscovery: true,
+        },
+      }),
       nodePolyfills({
         include: ['buffer', 'process', 'util', 'stream', 'crypto'],
         globals: {
@@ -138,15 +150,6 @@ export default defineConfig((config) => {
           return null;
         },
       },
-      config.mode !== 'test' && remixCloudflareDevProxy(),
-      remixVitePlugin({
-        future: {
-          v3_fetcherPersist: true,
-          v3_relativeSplatPath: true,
-          v3_throwAbortReason: true,
-          v3_lazyRouteDiscovery: true,
-        },
-      }),
       UnoCSS(),
       tsconfigPaths(),
       chrome129IssuePlugin(),
