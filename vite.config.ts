@@ -91,6 +91,16 @@ export default defineConfig((config) => {
       __PKG_OPTIONAL_DEPENDENCIES: JSON.stringify(pkg.optionalDependencies),
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     },
+    // Add server configuration with allowedHosts
+    server: {
+      host: true, // Listen on all local IPs
+      allowedHosts: [
+        'desktop-hi6550u.stoat-bee.ts.net', // Add your specific host
+        'localhost',
+        '127.0.0.1',
+        '.local',
+      ],
+    },
     build: {
       target: 'esnext',
       rollupOptions: {
